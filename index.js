@@ -40,8 +40,6 @@ app.get('/net', (req, res) => {
                 baseurl = req.query.url.replace("https://","")
             }
 
-            console.log(baseurl)
-
             var olddom = new JSDOM(`${body}`, { url: req.query.url});
             var reader = new Readability(olddom.window.document);
             var lite = reader.parse();
@@ -49,7 +47,6 @@ app.get('/net', (req, res) => {
             var contentLatest = contentLatest.split(`href="http://www.${baseurl}`).join(`href="${proxying}http://${baseurl}`)
             var contentLatest = contentLatest.split(`href="https://${baseurl}`).join(`href="${proxying}https://${baseurl}`)
             var contentLatest = contentLatest.split(`href="http://${baseurl}`).join(`href="${proxying}http://${baseurl}`)
-            //console.log(contentLatest)
             resf.send(`<html>
             <head><title>BasedNet</title></head>
             <body>
