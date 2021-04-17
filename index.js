@@ -58,7 +58,7 @@ app.get('/net', (req, res) => {
                 <input type="text" width="100%" id="url" name="url" value="http://"><input type="submit" value="be a chad">
             </form>
             <hr>
-            <h1>${lite.siteName} - ${lite.title}</h1><br>
+            <h1>${lite.title}</h1><br>
             ${contentLatest}
         
             </body>
