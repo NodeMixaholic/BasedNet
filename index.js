@@ -3,15 +3,46 @@ var { Readability } = require('@mozilla/readability');
 var { JSDOM } = require('jsdom');
 const request = require('request');
 const e = require('express');
+const { head } = require('request');
 const app = express()
 const port = 2052
 const subdomain = "localhost"
 const siteName = `http://${subdomain}:${port}`
 const proxying = `${siteName}/net?url=`
+var headHTML = `<head>
+<title>BasedNet</title>
+<style>
+/* Media Queries: Tablet Landscape */
+@media screen and (max-width: 1060px) {
+    #primary { width:67%; }
+    #secondary { width:30%; margin-left:3%;}  
+}
+
+/* Media Queries: Tabled Portrait */
+@media screen and (max-width: 768px) {
+    #primary { width:100%; }
+    #secondary { width:100%; margin:0; border:none; }
+}
+html { font-size:1rem; }
+p {font-size:1rem;}
+b {font-size:1.2rem;}
+a {font-size:1.23rem;} 
+input {font-size:1.23rem;} 
+h6 {font-size:1.23rem;}
+h5 {font-size:1.35rem;}
+h4 {font-size:1.5rem;}
+h3 {font-size:1.6rem;}
+h2 {font-size:1.8rem;}
+h1 {font-size:2rem;}
+
+body { font-family: Arial, Helvetica, sans-serif; }
+
+</style>
+</head>`
 
 app.get('/', (req, res) => {
     res.send(`<html>
-    <head><title>BasedNet</title></head>
+    ${headHTML}
     <body>
     <h1>BasedNet</h1><br>
     <form action="/net" style="algin: center;" method="get">
@@ -29,6 +60,7 @@ app.get('/net', (req, res) => {
     const reqf = req;
     const resf = res;
     var baseurl = ""
+    
     request(req.query.url, { json: false }, (err, res, body) => {
         if (err) { return console.log(err); }
         //console.log(body)
@@ -48,7 +80,7 @@ app.get('/net', (req, res) => {
             var contentLatest = contentLatest.split(`href="https://${baseurl}`).join(`href="${proxying}https://${baseurl}`)
             var contentLatest = contentLatest.split(`href="http://${baseurl}`).join(`href="${proxying}http://${baseurl}`)
             resf.send(`<html>
-            <head><title>BasedNet</title></head>
+            ${headHTML}
             <body>
             <b>BasedNet</b>
             <form action="/net" align="center" width="100%" method="get">
@@ -65,7 +97,7 @@ app.get('/net', (req, res) => {
             var reader = new Readability(olddom.window.document);
             var lite = reader.parse();
             resf.send(`<html>
-            <head><title>BasedNet</title></head>
+            ${headHTML}
             <body>
             <b>BasedNet</b>
             <form action="/net" align="center" width="100%" method="get">
