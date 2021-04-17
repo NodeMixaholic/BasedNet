@@ -1,0 +1,21 @@
+{
+  "dependencies": {
+    "@mozilla/readability": "^0.4.1",
+    "express": "^4.17.1",
+    "jsdom": "^16.5.3",
+    "request": "^2.88.2"
+  },
+  "name": "basednet",
+  "version": "1.0.0",
+  "description": "Based internet for all. Licensed under the MIT license, inspired by Action Retro and Luke Smith.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "internet",
+    "lightweight"
+  ],
+  "author": "Samuel Lord",
+  "license": "MIT"
+}
