@@ -20,7 +20,7 @@ app.get('/', (req, res) => {
     </form> 
     <hr>
     <p>Copyright Samuel Lord. Licensed under the MIT license.
-    <br>Source available on the Basednet GitHub.</p>
+    <br>Source available on the <a href="https://github.com/sparksammy/BasedNet" target="_blank">BasedNet GitHub.</a></p>
     </body>
     </html>`)
 })
