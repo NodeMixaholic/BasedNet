@@ -56,6 +56,7 @@ app.get('/', (req, res) => {
     </html>`)
 })
 
+
 app.get('/net', (req, res) => {
     const reqf = req;
     const resf = res;
@@ -80,10 +81,11 @@ app.get('/net', (req, res) => {
             newbody = newbody.replace(/<link\b[^<]*(?:(?!<\/link>)<[^<]*)*<\/link>/gi, "")
             newbody = newbody.replace(/<meta\b[^<]*(?:(?!<\/meta>)<[^<]*)*<\/meta>/gi, "")
             newbody = newbody.replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, "")
-            newbody = newbody.replace(`href="${req.query.url}`, `href="${proxying}${req.query.url}`)
-            newbody = newbody.replace(`href='${req.query.url}`, `href='${proxying}${req.query.url}`)
-            newbody = newbody.replace(`src="`, `src="${req.query.url}/`)
-            newbody = newbody.replace(`src='`, `src='${req.query.url}/`)
+            newbody = newbody.replace(/<form\b[^<]*(?:(?!<\/form>)<[^<]*)*<\/form>/gi, "")
+            newbody = newbody.replace(/href="/g, `href="${proxying}${req.query.url}/`)
+            newbody = newbody.replace(/href='/g, `href='${proxying}${req.query.url}/`)
+            newbody = newbody.replace(/src="/g, `src="${req.query.url}/`)
+            newbody = newbody.replace(/src='/g, `src='${req.query.url}/`)
             resf.send(`<html>
             ${headHTML}
             <body>
@@ -97,7 +99,8 @@ app.get('/net', (req, res) => {
         
             </body>
             </html>`)
-        } catch {
+        } catch (error) {
+            console.log(error);
             var olddom = new JSDOM(`<h1>Error while processing.</h1>`, { url: req.query.url});
             var reader = new Readability(olddom.window.document);
             var lite = reader.parse();
