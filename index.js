@@ -6,7 +6,7 @@ const e = require('express');
 const { head } = require('request');
 const app = express()
 const port = 2052
-const subdomain = "localhost"
+const subdomain = "www.sparksammy.com"
 const siteName = `http://${subdomain}:${port}`
 const proxying = `${siteName}/net?url=`
 var headHTML = `<head>
@@ -73,12 +73,16 @@ app.get('/net', (req, res) => {
             }
 
             var olddom = new JSDOM(`${body}`, { url: req.query.url});
-            var reader = new Readability(olddom.window.document);
-            var lite = reader.parse();
-            var contentLatest = lite.content.split(`href="https://www.${baseurl}`).join(`href="${proxying}https://${baseurl}`)
-            var contentLatest = contentLatest.split(`href="http://www.${baseurl}`).join(`href="${proxying}http://${baseurl}`)
-            var contentLatest = contentLatest.split(`href="https://${baseurl}`).join(`href="${proxying}https://${baseurl}`)
-            var contentLatest = contentLatest.split(`href="http://${baseurl}`).join(`href="${proxying}http://${baseurl}`)
+            var newbody = body
+            var arrOfTags = []
+            newbody = newbody.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
+            newbody = newbody.replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, "")
+            newbody = newbody.replace(/<link\b[^<]*(?:(?!<\/link>)<[^<]*)*<\/link>/gi, "")
+            newbody = newbody.replace(/<meta\b[^<]*(?:(?!<\/meta>)<[^<]*)*<\/meta>/gi, "")
+            newbody = newbody.replace(`href="${req.query.url}`, `href="${proxying}${req.query.url}`)
+            newbody = newbody.replace(`href='${req.query.url}`, `href='${proxying}${req.query.url}`)
+            newbody = newbody.replace(`src="`, `src="${req.query.url}/`)
+            newbody = newbody.replace(`src='`, `src='${req.query.url}/`)
             resf.send(`<html>
             ${headHTML}
             <body>
@@ -87,8 +91,8 @@ app.get('/net', (req, res) => {
                 <input type="text" width="100%" id="url" name="url" value="http://"><input type="submit" value="be a chad">
             </form>
             <hr>
-            <h1>${lite.title}</h1><br>
-            ${contentLatest}
+            
+            ${newbody}
         
             </body>
             </html>`)
