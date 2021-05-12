@@ -79,6 +79,7 @@ app.get('/net', (req, res) => {
             newbody = newbody.replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, "")
             newbody = newbody.replace(/<link\b[^<]*(?:(?!<\/link>)<[^<]*)*<\/link>/gi, "")
             newbody = newbody.replace(/<meta\b[^<]*(?:(?!<\/meta>)<[^<]*)*<\/meta>/gi, "")
+            newbody = newbody.replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, "")
             newbody = newbody.replace(`href="${req.query.url}`, `href="${proxying}${req.query.url}`)
             newbody = newbody.replace(`href='${req.query.url}`, `href='${proxying}${req.query.url}`)
             newbody = newbody.replace(`src="`, `src="${req.query.url}/`)
