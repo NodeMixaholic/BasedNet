@@ -86,6 +86,49 @@ app.get('/net', (req, res) => {
             newbody = newbody.replace(/href='/g, `href='${proxying}${req.query.url}/`)
             newbody = newbody.replace(/src="/g, `src="${req.query.url}/`)
             newbody = newbody.replace(/src='/g, `src='${req.query.url}/`)
+            var newdom = new JSDOM(`${newbody}`, { url: req.query.url});
+            var reader = new Readability(newdom.window.document);
+            var liteRead = reader.parse();
+            var contentLatest = liteRead.content.split(`href="https://www.${baseurl}`).join(`href="${proxying}https://${baseurl}`)
+            var contentLatest = contentLatest.split(`href="http://www.${baseurl}`).join(`href="${proxying}http://${baseurl}`)
+            var contentLatest = contentLatest.split(`href="https://${baseurl}`).join(`href="${proxying}https://${baseurl}`)
+            var contentLatest = contentLatest.split(`href="http://${baseurl}`).join(`href="${proxying}http://${baseurl}`)
+            resf.send(`<html>
+            ${headHTML}
+            <body>
+            <b>BasedNet</b>
+            <form action="/net" align="center" width="100%" method="get">
+                <input type="text" width="100%" id="url" name="url" value="http://"><input type="submit" value="be a chad">
+            </form>
+            <hr>
+            <h1>${liteRead.title}</h1>
+            <hr>
+            
+            ${contentLatest}
+        
+            </body>
+            </html>`)
+        } catch (error) {
+            console.log(error);
+            if (req.query.url.startsWith("http://")) {
+                baseurl = req.query.url.replace("http://","")
+            } else {
+                baseurl = req.query.url.replace("https://","")
+            }
+
+            var olddom = new JSDOM(`${body}`, { url: req.query.url});
+            var newbody = body
+            var arrOfTags = []
+            newbody = newbody.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
+            newbody = newbody.replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, "")
+            newbody = newbody.replace(/<link\b[^<]*(?:(?!<\/link>)<[^<]*)*<\/link>/gi, "")
+            newbody = newbody.replace(/<meta\b[^<]*(?:(?!<\/meta>)<[^<]*)*<\/meta>/gi, "")
+            newbody = newbody.replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, "")
+            newbody = newbody.replace(/<form\b[^<]*(?:(?!<\/form>)<[^<]*)*<\/form>/gi, "")
+            newbody = newbody.replace(/href="/g, `href="${proxying}${req.query.url}/`)
+            newbody = newbody.replace(/href='/g, `href='${proxying}${req.query.url}/`)
+            newbody = newbody.replace(/src="/g, `src="${req.query.url}/`)
+            newbody = newbody.replace(/src='/g, `src='${req.query.url}/`)
             resf.send(`<html>
             ${headHTML}
             <body>
@@ -96,24 +139,6 @@ app.get('/net', (req, res) => {
             <hr>
             
             ${newbody}
-        
-            </body>
-            </html>`)
-        } catch (error) {
-            console.log(error);
-            var olddom = new JSDOM(`<h1>Error while processing.</h1>`, { url: req.query.url});
-            var reader = new Readability(olddom.window.document);
-            var lite = reader.parse();
-            resf.send(`<html>
-            ${headHTML}
-            <body>
-            <b>BasedNet</b>
-            <form action="/net" align="center" width="100%" method="get">
-                <input type="text" width="100%" id="url" name="url" value="http://"><input type="submit" value="be a chad">
-            </form>
-            <hr>
-            <h1>${lite.title}</h1><br>
-            ${lite.content}
         
             </body>
             </html>`)
