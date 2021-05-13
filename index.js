@@ -72,6 +72,16 @@ app.get('/net', (req, res) => {
             } else {
                 baseurl = req.query.url.replace("https://","")
             }
+            
+            var arrOfURL = req.query.url.split("/")
+            var urlNoDoc = req.query.url
+            for (let i = 0; i < arrOfURL.length; i++) {
+                if (String(arrOfURL[i]).includes("html")) {
+                    arrOfURL.pop(i)
+                    urlNoDoc = arrOfURL.join("/")
+                    break;
+                }
+            }
 
             var olddom = new JSDOM(`${body}`, { url: req.query.url});
             var newbody = body
@@ -82,11 +92,16 @@ app.get('/net', (req, res) => {
             newbody = newbody.replace(/<meta\b[^<]*(?:(?!<\/meta>)<[^<]*)*<\/meta>/gi, "")
             newbody = newbody.replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, "")
             newbody = newbody.replace(/<form\b[^<]*(?:(?!<\/form>)<[^<]*)*<\/form>/gi, "")
-            newbody = newbody.replace(/href="/g, `href="${proxying}${req.query.url}/`)
-            newbody = newbody.replace(/href='/g, `href='${proxying}${req.query.url}/`)
-            newbody = newbody.replace(/src="/g, `src="${req.query.url}/`)
-            newbody = newbody.replace(/src='/g, `src='${req.query.url}/`)
+            newbody = newbody.replace(/href="/g, `href="${proxying}${urlNoDoc}/`)
+            newbody = newbody.replace(/href='/g, `href='${proxying}${urlNoDoc}/`)
+            newbody = newbody.replace(/src="/g, `src="${urlNoDoc}/`)
+            newbody = newbody.replace(/src='/g, `src='${urlNoDoc}/`)
+            newbody = newbody.replace(`href="${urlNoDoc}/http://`, `href="http://`)
+            newbody = newbody.replace(`href='${urlNoDoc}/http://`, `href='http://`)
+            newbody = newbody.replace(`${urlNoDoc}/http://`, `http://`)
+            newbody = newbody.replace(`${urlNoDoc}/https://`, `https://`)
             var newdom = new JSDOM(`${newbody}`, { url: req.query.url});
+            
             var reader = new Readability(newdom.window.document);
             var liteRead = reader.parse();
             var contentLatest = liteRead.content.split(`href="https://www.${baseurl}`).join(`href="${proxying}https://${baseurl}`)
@@ -116,6 +131,16 @@ app.get('/net', (req, res) => {
                 baseurl = req.query.url.replace("https://","")
             }
 
+            var arrOfURL = req.query.url.split("/")
+            var urlNoDoc = req.query.url
+            for (let i = 0; i < arrOfURL.length; i++) {
+                if (String(arrOfURL[i]).includes("html")) {
+                    arrOfURL.pop(i)
+                    urlNoDoc = arrOfURL.join("/")
+                    break;
+                }
+            }
+
             var olddom = new JSDOM(`${body}`, { url: req.query.url});
             var newbody = body
             var arrOfTags = []
@@ -125,10 +150,16 @@ app.get('/net', (req, res) => {
             newbody = newbody.replace(/<meta\b[^<]*(?:(?!<\/meta>)<[^<]*)*<\/meta>/gi, "")
             newbody = newbody.replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, "")
             newbody = newbody.replace(/<form\b[^<]*(?:(?!<\/form>)<[^<]*)*<\/form>/gi, "")
-            newbody = newbody.replace(/href="/g, `href="${proxying}${req.query.url}/`)
-            newbody = newbody.replace(/href='/g, `href='${proxying}${req.query.url}/`)
-            newbody = newbody.replace(/src="/g, `src="${req.query.url}/`)
-            newbody = newbody.replace(/src='/g, `src='${req.query.url}/`)
+            newbody = newbody.replace(/href="/g, `href="${proxying}${urlNoDoc}/`)
+            newbody = newbody.replace(/href='/g, `href='${proxying}${urlNoDoc}/`)
+            newbody = newbody.replace(/src="/g, `src="${urlNoDoc}/`)
+            newbody = newbody.replace(/src='/g, `src='${urlNoDoc}/`)
+            newbody = newbody.split(`href="https://www.${baseurl}`).join(`href="${proxying}https://${baseurl}`)
+            newbody = newbody.split(`href="http://www.${baseurl}`).join(`href="${proxying}http://${baseurl}`)
+            newbody = newbody.split(`href="https://${baseurl}`).join(`href="${proxying}https://${baseurl}`)
+            newbody = conewbodyntentLatest.split(`href="http://${baseurl}`).join(`href="${proxying}http://${baseurl}`)
+            newbody = newbody.replace(`${urlNoDoc}/http://`, `http://`)
+            newbody = newbody.replace(`${urlNoDoc}/https://`, `https://`)
             resf.send(`<html>
             ${headHTML}
             <body>
