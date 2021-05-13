@@ -157,7 +157,7 @@ app.get('/net', (req, res) => {
             newbody = newbody.split(`href="https://www.${baseurl}`).join(`href="${proxying}https://${baseurl}`)
             newbody = newbody.split(`href="http://www.${baseurl}`).join(`href="${proxying}http://${baseurl}`)
             newbody = newbody.split(`href="https://${baseurl}`).join(`href="${proxying}https://${baseurl}`)
-            newbody = conewbodyntentLatest.split(`href="http://${baseurl}`).join(`href="${proxying}http://${baseurl}`)
+            newbody = newbody.split(`href="http://${baseurl}`).join(`href="${proxying}http://${baseurl}`)
             newbody = newbody.replace(`${urlNoDoc}/http://`, `http://`)
             newbody = newbody.replace(`${urlNoDoc}/https://`, `https://`)
             resf.send(`<html>
