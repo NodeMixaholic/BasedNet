@@ -151,7 +151,9 @@ app.get('/net', (req, res) => {
             contentLatest = contentLatest.split(`${urlNoDoc}/https://`).join(`https://`)
             contentLatest = contentLatest.split(`${proxying}//`).join(`${proxying}https://`)
             contentLatest = contentLatest.split(`${proxying}${req.query.url}///`).join(`${proxying}https://`)
-            contentLatest = contentLatest.split('https://based.sparksammy.com/net?url=/').join('https://based.sparksammy.com/net?url=')
+            contentLatest = contentLatest.split('based.sparksammy.com/net?url=/').join('based.sparksammy.com/net?url=')
+            contentLatest = contentLatest.split('https://based.sparksammy.com/net?url=https://based.sparksammy.com/net?url=').join('https://based.sparksammy.com/net?url=')
+            contentLatest = contentLatest.split('http://based.sparksammy.com/net?url=http://based.sparksammy.com/net?url=').join('http://based.sparksammy.com/net?url=')
             resf.send(`<html>
             ${headHTML}
             <script>
@@ -215,7 +217,9 @@ app.get('/net', (req, res) => {
             newbody = newbody.split(`${urlNoDoc}/https://`).join(`https://`)
             newbody = newbody.split(`${proxying}//`).join(`${proxying}https://`)
             newbody = newbody.split(`${proxying}${req.query.url}///`).join(`${proxying}https://`)
-            newbody = newbody.split('https://based.sparksammy.com/net?url=/').join('https://based.sparksammy.com/net?url=')
+            newbody = newbody.split('based.sparksammy.com/net?url=/').join('based.sparksammy.com/net?url=')
+            newbody = newbody.split('https://based.sparksammy.com/net?url=https://based.sparksammy.com/net?url=').join('https://based.sparksammy.com/net?url=')
+            newbody = newbody.split('http://based.sparksammy.com/net?url=http://based.sparksammy.com/net?url=').join('http://based.sparksammy.com/net?url=')
             resf.send(`<html>
             ${headHTML}
             <script>
