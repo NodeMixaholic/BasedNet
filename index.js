@@ -5,9 +5,25 @@ const request = require('request');
 const e = require('express');
 const { head } = require('request');
 const app = express()
-const port = 2052
-const subdomain = "www.sparksammy.com"
-const siteName = `http://${subdomain}:${port}`
+const port = 80 //which port?
+const noPortInDomain = true //is there a port visible in the domain?
+const httpOrHttps = "https" //is set to http when changed to anything besides the default (http)
+const subdomain = "based.sparksammy.com"
+var siteName;
+// code below.
+if (httpOrHttps == "https") {
+  if (noPortInDomain == false) {
+    siteName = `https://${subdomain}:${port}`
+  } else {
+    siteName = `https://${subdomain}`
+  }
+} else {
+  if (noPortInDomain == false) {
+    siteName = `http://${subdomain}:${port}`
+  } else {
+    siteName = `http://${subdomain}`
+  }
+}
 const proxying = `${siteName}/net?url=`
 var headHTML = `<head>
 <title>BasedNet</title>
@@ -94,20 +110,16 @@ app.get('/net', (req, res) => {
             newbody = newbody.replace(/<form\b[^<]*(?:(?!<\/form>)<[^<]*)*<\/form>/gi, "")
             newbody = newbody.replace(/href="/g, `href="${proxying}${urlNoDoc}/`)
             newbody = newbody.replace(/href='/g, `href='${proxying}${urlNoDoc}/`)
-            newbody = newbody.replace(/src="/g, `src="${urlNoDoc}/`)
-            newbody = newbody.replace(/src='/g, `src='${urlNoDoc}/`)
-            newbody = newbody.replace(`href="${urlNoDoc}/http://`, `href="http://`)
-            newbody = newbody.replace(`href='${urlNoDoc}/http://`, `href='http://`)
-            newbody = newbody.replace(`${urlNoDoc}/http://`, `http://`)
-            newbody = newbody.replace(`${urlNoDoc}/https://`, `https://`)
             var newdom = new JSDOM(`${newbody}`, { url: req.query.url});
             
             var reader = new Readability(newdom.window.document);
             var liteRead = reader.parse();
             var contentLatest = liteRead.content.split(`href="https://www.${baseurl}`).join(`href="${proxying}https://${baseurl}`)
-            var contentLatest = contentLatest.split(`href="http://www.${baseurl}`).join(`href="${proxying}http://${baseurl}`)
-            var contentLatest = contentLatest.split(`href="https://${baseurl}`).join(`href="${proxying}https://${baseurl}`)
-            var contentLatest = contentLatest.split(`href="http://${baseurl}`).join(`href="${proxying}http://${baseurl}`)
+            contentLatest = contentLatest.split(`href="https://www.${baseurl}`).join(`href="${proxying}https://${baseurl}`)
+            contentLatest = contentLatest.split(`href="http://www.${baseurl}`).join(`href="${proxying}http://${baseurl}`)
+            contentLatest = contentLatest.split(`href='https://${baseurl}`).join(`href='${proxying}https://${baseurl}`)
+            contentLatest = contentLatest.split(`href='http://${baseurl}`).join(`href='${proxying}http://${baseurl}`)
+            contentLatest = contentLatest.replace(`${proxying}//`, `${proxying}https://`)
             resf.send(`<html>
             ${headHTML}
             <body>
@@ -152,14 +164,13 @@ app.get('/net', (req, res) => {
             newbody = newbody.replace(/<form\b[^<]*(?:(?!<\/form>)<[^<]*)*<\/form>/gi, "")
             newbody = newbody.replace(/href="/g, `href="${proxying}${urlNoDoc}/`)
             newbody = newbody.replace(/href='/g, `href='${proxying}${urlNoDoc}/`)
-            newbody = newbody.replace(/src="/g, `src="${urlNoDoc}/`)
-            newbody = newbody.replace(/src='/g, `src='${urlNoDoc}/`)
             newbody = newbody.split(`href="https://www.${baseurl}`).join(`href="${proxying}https://${baseurl}`)
             newbody = newbody.split(`href="http://www.${baseurl}`).join(`href="${proxying}http://${baseurl}`)
-            newbody = newbody.split(`href="https://${baseurl}`).join(`href="${proxying}https://${baseurl}`)
-            newbody = newbody.split(`href="http://${baseurl}`).join(`href="${proxying}http://${baseurl}`)
+            newbody = newbody.split(`href='https://${baseurl}`).join(`href='${proxying}https://${baseurl}`)
+            newbody = newbody.split(`href='http://${baseurl}`).join(`href='${proxying}http://${baseurl}`)
             newbody = newbody.replace(`${urlNoDoc}/http://`, `http://`)
             newbody = newbody.replace(`${urlNoDoc}/https://`, `https://`)
+            newbody = newbody.replace(`${proxying}//`, `${proxying}https://`)
             resf.send(`<html>
             ${headHTML}
             <body>
