@@ -66,12 +66,36 @@ app.get('/', (req, res) => {
         <input type="submit" value="be a chad.">
     </form> 
     <hr>
+    <a href="/basedfind">Check out the other project, BasedFind!</a>
+    <hr>
     <p>Copyright Samuel Lord. Licensed under the MIT license.
     <br>Source available on the <a href="https://github.com/sparksammy/BasedNet" target="_blank">BasedNet GitHub.</a></p>
     </body>
     </html>`)
 })
 
+
+app.get('/basedfind', (req, res) => {
+    res.send(`<html>
+    ${headHTML}
+    <body>
+    <h1>BasedFind *early build*</h1><br>
+    <script>
+    function find() {
+      const q = document.getElementById('query').value;
+      window.location.href = 'https://based.sparksammy.com/net?url=https://lite.duckduckgo.com/lite/?q=' + String(q)
+    }
+    </script>
+    <input type="text" id="query" width="100%" id="url" name="url" value="somewhat broken"><br>
+    <input type="button" onclick="find()" value="search like a chad."></button>
+    <hr>
+    <a href="/">Back to BasedNet.</a>
+    <hr>
+    <p>Copyright Samuel Lord. Licensed under the MIT license. Powered by DuckDuckGo Lite.
+    <br>Source available on the <a href="https://github.com/sparksammy/BasedNet" target="_blank">BasedNet GitHub.</a></p>
+    </body>
+    </html>`)
+})
 
 app.get('/net', (req, res) => {
     const reqf = req;
@@ -98,6 +122,8 @@ app.get('/net', (req, res) => {
                     break;
                 }
             }
+            var arrOfURL2 = req.query.url.split("/")
+            const domain = arrOfURL2[2]
 
             var olddom = new JSDOM(`${body}`, { url: req.query.url});
             var newbody = body
@@ -108,8 +134,10 @@ app.get('/net', (req, res) => {
             newbody = newbody.replace(/<meta\b[^<]*(?:(?!<\/meta>)<[^<]*)*<\/meta>/gi, "")
             newbody = newbody.replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, "")
             newbody = newbody.replace(/<form\b[^<]*(?:(?!<\/form>)<[^<]*)*<\/form>/gi, "")
-            newbody = newbody.replace(/href="/g, `href="${proxying}${urlNoDoc}/`)
-            newbody = newbody.replace(/href='/g, `href='${proxying}${urlNoDoc}/`)
+            newbody = newbody.replace(/href="\//g, `href="${proxying}http://${domain}/`)
+            newbody = newbody.replace(/href='\//g, `href='${proxying}http://${domain}/`)
+            newbody = newbody.replace(/href="/g, `href="${proxying}/`)
+            newbody = newbody.replace(/href='/g, `href='${proxying}/`)
             var newdom = new JSDOM(`${newbody}`, { url: req.query.url});
             
             var reader = new Readability(newdom.window.document);
@@ -119,14 +147,27 @@ app.get('/net', (req, res) => {
             contentLatest = contentLatest.split(`href="http://www.${baseurl}`).join(`href="${proxying}http://${baseurl}`)
             contentLatest = contentLatest.split(`href='https://${baseurl}`).join(`href='${proxying}https://${baseurl}`)
             contentLatest = contentLatest.split(`href='http://${baseurl}`).join(`href='${proxying}http://${baseurl}`)
-            contentLatest = contentLatest.replace(`${proxying}//`, `${proxying}https://`)
+            contentLatest = contentLatest.split(`${urlNoDoc}/http://`).join(`http://`)
+            contentLatest = contentLatest.split(`${urlNoDoc}/https://`).join(`https://`)
+            contentLatest = contentLatest.split(`${proxying}//`).join(`${proxying}https://`)
+            contentLatest = contentLatest.split(`${proxying}${req.query.url}///`).join(`${proxying}https://`)
+            contentLatest = contentLatest.split('https://based.sparksammy.com/net?url=/').join('https://based.sparksammy.com/net?url=')
             resf.send(`<html>
             ${headHTML}
+            <script>
+            function find() {
+            const q = document.getElementById('query').value;
+            window.location.href = 'https://based.sparksammy.com/net?url=https://lite.duckduckgo.com/lite/?q=' + String(q)
+            }
+            </script>
             <body>
             <b>BasedNet</b>
             <form action="/net" align="center" width="100%" method="get">
                 <input type="text" width="100%" id="url" name="url" value="http://"><input type="submit" value="be a chad">
             </form>
+            <hr>
+            <b>BasedFind *early build*</b>
+            <input type="text" id="query" width="100%" id="url" name="url" value="somewhat broken"><input type="button" onclick="find()" value="search like a chad."></button>
             <hr>
             <h1>${liteRead.title}</h1>
             <hr>
@@ -162,22 +203,35 @@ app.get('/net', (req, res) => {
             newbody = newbody.replace(/<meta\b[^<]*(?:(?!<\/meta>)<[^<]*)*<\/meta>/gi, "")
             newbody = newbody.replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, "")
             newbody = newbody.replace(/<form\b[^<]*(?:(?!<\/form>)<[^<]*)*<\/form>/gi, "")
-            newbody = newbody.replace(/href="/g, `href="${proxying}${urlNoDoc}/`)
-            newbody = newbody.replace(/href='/g, `href='${proxying}${urlNoDoc}/`)
+            newbody = newbody.replace(/href="/g, `href="${proxying}/`)
+            newbody = newbody.replace(/href='/g, `href='${proxying}/`)
+            newbody = newbody.replace(/href="/g, `href="${proxying}/`)
+            newbody = newbody.replace(/href='/g, `href='${proxying}/`)
             newbody = newbody.split(`href="https://www.${baseurl}`).join(`href="${proxying}https://${baseurl}`)
             newbody = newbody.split(`href="http://www.${baseurl}`).join(`href="${proxying}http://${baseurl}`)
             newbody = newbody.split(`href='https://${baseurl}`).join(`href='${proxying}https://${baseurl}`)
             newbody = newbody.split(`href='http://${baseurl}`).join(`href='${proxying}http://${baseurl}`)
-            newbody = newbody.replace(`${urlNoDoc}/http://`, `http://`)
-            newbody = newbody.replace(`${urlNoDoc}/https://`, `https://`)
-            newbody = newbody.replace(`${proxying}//`, `${proxying}https://`)
+            newbody = newbody.split(`${urlNoDoc}/http://`).join(`http://`)
+            newbody = newbody.split(`${urlNoDoc}/https://`).join(`https://`)
+            newbody = newbody.split(`${proxying}//`).join(`${proxying}https://`)
+            newbody = newbody.split(`${proxying}${req.query.url}///`).join(`${proxying}https://`)
+            newbody = newbody.split('https://based.sparksammy.com/net?url=/').join('https://based.sparksammy.com/net?url=')
             resf.send(`<html>
             ${headHTML}
+            <script>
+            function find() {
+            const q = document.getElementById('query').value;
+            window.location.href = 'https://based.sparksammy.com/net?url=https://lite.duckduckgo.com/lite/?q=' + String(q)
+            }
+            </script>
             <body>
             <b>BasedNet</b>
             <form action="/net" align="center" width="100%" method="get">
                 <input type="text" width="100%" id="url" name="url" value="http://"><input type="submit" value="be a chad">
             </form>
+            <hr>
+            <b>BasedFind *early build*</b>
+            <input type="text" id="query" width="100%" id="url" name="url" value="somewhat broken"><input type="button" onclick="find()" value="search like a chad."></button>
             <hr>
             
             ${newbody}
