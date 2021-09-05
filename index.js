@@ -8,7 +8,7 @@ const app = express()
 const port = 80 //which port?
 const noPortInDomain = true //is there a port visible in the domain?
 const httpOrHttps = "https" //is set to http when changed to anything besides the default (http)
-const subdomain = "based.sparksammy.com"
+const subdomain = "based.sparksammy.com" //subdomain where your basednet instance resides.
 var siteName;
 // code below.
 if (httpOrHttps == "https") {
