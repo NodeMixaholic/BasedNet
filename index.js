@@ -82,7 +82,7 @@ let thtml;
 search.results.forEach(function(e,i) {
     thtml = `${thtml} <br> <a href="${search.results[i].url}">$search.results[i].title}</a>`
 });
-res.send();
+res.send(thtml);
 })
 
 
@@ -103,7 +103,7 @@ app.get('/basedfind', (req, res) => {
       window.location.href = '/net?url=${httpOrHttps}://${subdomain}:${dp}/find?q=' + String(q)
     }
     </script>
-    <input type="text" id="query" width="100%" id="url" name="url" value="hello world"><br>
+    <input type="text" id="query" width="100%" id="url" name="url" value="somewhat broken"><br>
     <input type="button" onclick="find()" value="search like a chad."></button>
     <hr>
     <a href="/">Back to BasedNet.</a>
@@ -192,7 +192,7 @@ app.get('/net', (req, res) => {
             </form>
             <hr>
             <b>BasedFind *early build*</b>
-            <input type="text" id="query" width="100%" id="url" name="url" value="hello world!"><input type="button" onclick="find()" value="search like a chad."></button>
+            <input type="text" id="query" width="100%" id="url" name="url" value="somewhat broken"><input type="button" onclick="find()" value="search like a chad."></button>
             <hr>
             <h1>${liteRead.title}</h1>
             <hr>
@@ -258,7 +258,7 @@ app.get('/net', (req, res) => {
             </form>
             <hr>
             <b>BasedFind *early build*</b>
-            <input type="text" id="query" width="100%" id="url" name="url" value="hello world!"><input type="button" onclick="find()" value="search like a chad."></button>
+            <input type="text" id="query" width="100%" id="url" name="url" value="somewhat broken"><input type="button" onclick="find()" value="search like a chad."></button>
             <hr>
             
             ${newbody}
