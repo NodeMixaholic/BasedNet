@@ -4,11 +4,12 @@ var { JSDOM } = require('jsdom');
 const request = require('request');
 const e = require('express');
 const { head } = require('request');
+const DDG = require('duck-duck-scrape');
 const app = express()
-const port = 80 //which port?
+const port = 3001 //which port?
 const noPortInDomain = true //is there a port visible in the domain?
 const httpOrHttps = "https" //is set to http when changed to anything besides the default (http)
-const subdomain = "based.sparksammy.com" //subdomain where your basednet instance resides.
+const subdomain = "server.sparksammy.com" //subdomain where your basednet instance resides.
 var siteName;
 // code below.
 if (httpOrHttps == "https") {
@@ -75,7 +76,23 @@ app.get('/', (req, res) => {
 })
 
 
+app.get('/find', (req, res) => {
+const search = DDG.search(req.query.q)
+let thtml;
+search.results.forEach(function(e,i) {
+    thtml = `${thtml} <br> <a href="${search.results[i].url}">$search.results[i].title}</a>`
+});
+res.send();
+})
+
+
 app.get('/basedfind', (req, res) => {
+    let dp;
+    if (noPortInDomain == false) {
+    dp = port
+    } else {
+    dp = 80
+    }
     res.send(`<html>
     ${headHTML}
     <body>
@@ -83,10 +100,10 @@ app.get('/basedfind', (req, res) => {
     <script>
     function find() {
       const q = document.getElementById('query').value;
-      window.location.href = 'https://based.sparksammy.com/net?url=https://whoogle.sparksammy.com/search?q=' + String(q)
+      window.location.href = '/net?url=${httpOrHttps}://${subdomain}:${dp}/find?q=' + String(q)
     }
     </script>
-    <input type="text" id="query" width="100%" id="url" name="url" value="somewhat broken"><br>
+    <input type="text" id="query" width="100%" id="url" name="url" value="hello world"><br>
     <input type="button" onclick="find()" value="search like a chad."></button>
     <hr>
     <a href="/">Back to BasedNet.</a>
@@ -101,6 +118,12 @@ app.get('/net', (req, res) => {
     const reqf = req;
     const resf = res;
     var baseurl = ""
+    let dp;
+    if (noPortInDomain == false) {
+    dp = port
+    } else {
+    dp = 80
+    }
     
     request(req.query.url, { json: false }, (err, res, body) => {
         if (err) { return console.log(err); }
@@ -159,7 +182,7 @@ app.get('/net', (req, res) => {
             <script>
             function find() {
             const q = document.getElementById('query').value;
-            window.location.href = 'https://based.sparksammy.com/net?url=https://lite.duckduckgo.com/lite/?q=' + String(q)
+            window.location.href = '/net?url=${httpOrHttps}://${subdomain}:${dp}/find?q=' + String(q)
             }
             </script>
             <body>
@@ -169,7 +192,7 @@ app.get('/net', (req, res) => {
             </form>
             <hr>
             <b>BasedFind *early build*</b>
-            <input type="text" id="query" width="100%" id="url" name="url" value="somewhat broken"><input type="button" onclick="find()" value="search like a chad."></button>
+            <input type="text" id="query" width="100%" id="url" name="url" value="hello world!"><input type="button" onclick="find()" value="search like a chad."></button>
             <hr>
             <h1>${liteRead.title}</h1>
             <hr>
@@ -225,7 +248,7 @@ app.get('/net', (req, res) => {
             <script>
             function find() {
             const q = document.getElementById('query').value;
-            window.location.href = 'https://based.sparksammy.com/net?url=https://lite.duckduckgo.com/lite/?q=' + String(q)
+            window.location.href = '/net?url=${httpOrHttps}://${subdomain}:${dp}/find?q=' + String(q)
             }
             </script>
             <body>
@@ -235,7 +258,7 @@ app.get('/net', (req, res) => {
             </form>
             <hr>
             <b>BasedFind *early build*</b>
-            <input type="text" id="query" width="100%" id="url" name="url" value="somewhat broken"><input type="button" onclick="find()" value="search like a chad."></button>
+            <input type="text" id="query" width="100%" id="url" name="url" value="hello world!"><input type="button" onclick="find()" value="search like a chad."></button>
             <hr>
             
             ${newbody}
