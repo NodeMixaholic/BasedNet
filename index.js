@@ -83,7 +83,7 @@ app.get('/basedfind', (req, res) => {
     <script>
     function find() {
       const q = document.getElementById('query').value;
-      window.location.href = 'https://based.sparksammy.com/net?url=https://lite.duckduckgo.com/lite/?q=' + String(q)
+      window.location.href = 'https://based.sparksammy.com/net?url=https://whoogle.sparksammy.com/search?q=' + String(q)
     }
     </script>
     <input type="text" id="query" width="100%" id="url" name="url" value="somewhat broken"><br>
